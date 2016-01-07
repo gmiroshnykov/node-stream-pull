@@ -37,4 +37,21 @@ describe('streamPull', function() {
       });
     });
   });
+
+  it('should work if asked for 0 bytes', function(cb) {
+    var input = new streamBuffers.ReadableStreamBuffer({chunkSize: 1});
+    input.put('Hello World!');
+    input.stop();
+
+    streamPull(input, 0, function(err, content) {
+      assert.ifError(err);
+      assert.equal(content, '');
+
+      var rest = new streamBuffers.WritableStreamBuffer();
+      input.pipe(rest).on('finish', function() {
+        assert.equal(rest.getContentsAsString(), 'Hello World!');
+        cb();
+      });
+    });
+  });
 });

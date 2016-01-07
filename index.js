@@ -1,4 +1,8 @@
 function streamPull(readable, size, callback) {
+  if (size === 0) {
+    return callback(null, new Buffer(0));
+  }
+
   var chunk = readable.read(size);
   //console.log('streamPull:', chunk);
   if (chunk === null) {
