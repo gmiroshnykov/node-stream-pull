@@ -54,4 +54,15 @@ describe('streamPull', function() {
       });
     });
   });
+
+  it('should fail if given an empty stream', function(cb) {
+    var input = new streamBuffers.ReadableStreamBuffer({chunkSize: 1});
+    input.stop();
+
+    streamPull(input, 10, function(err, content) {
+      assert(err);
+      assert.equal(err.message, 'stream ended, but too few bytes were pulled');
+      cb();
+    });
+  });
 });
